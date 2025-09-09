@@ -1,31 +1,31 @@
-import { Actor, Engine, Scene } from "excalibur";
-import { Grid } from "../actors/grid.actor";
-import { GridComponent } from "../components/grid.component";
-import { UnitFactory } from "../actors/factories/unit.factory";
+import { Engine, Scene, EventEmitter } from "excalibur";
+import { GridEntity } from "../entities/grid.entity";
 import { Team, UnitClass } from "../components/unit.component";
-import { GRID_COLS, GRID_ROWS } from "../config/constants";
+import { GRID_ROWS } from "../config/constants";
 import { GridSystem } from "../systems/grid.system";
+import { UnitSpawningSystem } from "../systems/unit-spawning.system";
+import { GridEvents, SpawnUnitEvent } from "../events/grid.events";
+import { GameEvents } from "../interfaces/scene-with-events.interface";
 
 export class Battle extends Scene {
-    private _grid: Grid;
-    private _gridComponent: GridComponent;
-    private _gridEntity: Actor;
+    private _gridEntity: GridEntity;
     private _gridSystem: GridSystem;
+    private _unitSpawningSystem: UnitSpawningSystem;
+    public events = new EventEmitter<GameEvents>();
 
     constructor() {
         super();
 
-        this._grid = new Grid();
-        this.add(this._grid);
-        
-        this._gridComponent = new GridComponent(GRID_COLS, GRID_ROWS);
-        this._gridEntity = new Actor();
-        this._gridEntity.addComponent(this._gridComponent);
+        // Single unified grid entity
+        this._gridEntity = new GridEntity();
         this.add(this._gridEntity);
+        
+        // Add systems
+        this._unitSpawningSystem = new UnitSpawningSystem(this.world);
+        this.world.add(this._unitSpawningSystem);
         
         this._gridSystem = new GridSystem(this.world);
         this.world.add(this._gridSystem);
-
     }
     
     public onInitialize(_engine: Engine): void {
@@ -45,25 +45,23 @@ export class Battle extends Scene {
         ];
 
         playerUnits.forEach(config => {
-            const unit = UnitFactory.createUnit({
-                ...config,
-                team: Team.PLAYER
-            });
-            this.spawnUnit(unit, config.x, config.y);
+            this.events.emit(GridEvents.SpawnUnit, new SpawnUnitEvent(
+                config.x,
+                config.y,
+                Team.PLAYER,
+                config.unitClass,
+                config.name
+            ));
         });
 
         enemyUnits.forEach(config => {
-            const unit = UnitFactory.createUnit({
-                ...config,
-                team: Team.ENEMY
-            });
-            this.spawnUnit(unit, config.x, config.y);
+            this.events.emit(GridEvents.SpawnUnit, new SpawnUnitEvent(
+                config.x,
+                config.y,
+                Team.ENEMY,
+                config.unitClass,
+                config.name
+            ));
         });
-    }
-
-    private spawnUnit(unit: Actor, x: number, y: number): void {
-        if (this._gridSystem.placeUnit(unit, x, y)) {
-            this.add(unit);
-        }
     }
 }
