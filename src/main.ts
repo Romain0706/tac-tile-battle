@@ -1,39 +1,14 @@
-import { SplashScreen } from '@capacitor/splash-screen';
-import { Color, DisplayMode, Engine, FadeInOut } from "excalibur";
-import { loader } from "./resources";
-import { MyLevel } from "./level";
-
-// Goal is to keep main.ts small and just enough to configure the engine
+import { DisplayMode, Engine } from "excalibur";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "./config/constants";
+import { Battle } from "./scenes/battle.scene";
 
 const game = new Engine({
-  width: 800, // Logical width and height in game pixels
-  height: 600,
-  displayMode: DisplayMode.FitScreenAndFill, // Display mode tells excalibur how to fill the window
-  pixelArt: true, // pixelArt will turn on the correct settings to render pixel art without jaggies or shimmering artifacts
-  scenes: {
-    start: MyLevel
-  },
-  suppressPlayButton: true // Suppress the play button on mobile
-  // physics: {
-  //   solver: SolverStrategy.Realistic,
-  //   substep: 5 // Sub step the physics simulation for more robust simulations
-  // },
-  // fixedUpdateTimestep: 16 // Turn on fixed update timestep when consistent physic simulation is important
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+  displayMode: DisplayMode.FitScreen,
 });
 
-game.start('start', { // name of the start scene 'start'
-  loader, // Optional loader (but needed for loading images/sounds)
-  inTransition: new FadeInOut({ // Optional in transition
-    duration: 1000,
-    direction: 'in',
-    color: Color.ExcaliburBlue
-  })
-}).then(() => {
-  console.log('done loading')
-  // Do something after the game starts
-  SplashScreen.hide();
+game.add('battle', new Battle())
+game.start().then(() => {
+  game.goToScene('battle');
 });
-setTimeout(() => {
-  // Hack to hide the splash screen
-  SplashScreen.hide();
-}, 500);
