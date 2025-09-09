@@ -1,20 +1,20 @@
-import { Actor, Tile, Color } from 'excalibur';
-import { 
-  Team, 
-  TILE_SIZE,
-  Z_LAYERS,
-  COLORS
-} from '../../config/constants';
+import { Actor, Color, Vector } from 'excalibur';
+import { TILE_SIZE, Z_LAYERS, COLORS } from '../../config/constants';
+import { UnitComponent, Team, UnitClass } from '../../components/unit.component';
+import { PositionComponent } from '../../components/position.component';
+import { GridPositionComponent } from '../../components/grid-position.component';
 
 export interface UnitConfig {
-  tile: Tile;
+  x: number;
+  y: number;
   team: Team;
+  unitClass: UnitClass;
+  name?: string;
 }
 
 export class UnitFactory {
   static createUnit(config: UnitConfig): Actor {
     const unit = new Actor({
-      pos: config.tile.center,
       z: Z_LAYERS.UNIT,
       width: TILE_SIZE,
       height: TILE_SIZE,
@@ -23,22 +23,10 @@ export class UnitFactory {
         Color.fromHex(COLORS.ENEMY_UNIT),
     });
     
-    this.setupUnitEvents(unit);
+    unit.addComponent(new UnitComponent(config.team, config.unitClass, config.name));
+    unit.addComponent(new GridPositionComponent(config.x, config.y));
+    unit.addComponent(new PositionComponent(new Vector(0, 0)));
 
     return unit;
-  }
-
-  private static setupUnitEvents(unit: Actor): void {
-    unit.on('pointerdragstart', () => {
-      console.log('drag start');
-    });
-
-    unit.on('pointerdragmove', (evt) => {
-      console.log('drag move');
-    });
-
-    unit.on('pointerdragend', (evt) => {
-      console.log('drag end');
-    });
   }
 }

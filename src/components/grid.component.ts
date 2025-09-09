@@ -1,29 +1,20 @@
 import { Component, Entity } from "excalibur";
 
- export interface Cell {
-    x: number;
-    y: number;
-    occupiedBy: Entity | null;
+export class GridComponent extends Component {
+  public units: Map<string, Entity> = new Map();
+
+  constructor(
+    public cols: number,
+    public rows: number,
+  ) {
+    super();
   }
 
-export class GridComponent extends Component {
-    public cells: Cell[][] = [];
+  public getKey(x: number, y: number): string {
+    return `${x},${y}`;
+  }
 
-    constructor(
-        cols: number,
-        rows: number,
-    ) {
-        super();
-
-        for (let y = 0; y < rows; y++) {
-            this.cells[y] = [];
-            for (let x = 0; y < cols; y++) {
-                this.cells[y][x] = {
-                    x,
-                    y,
-                    occupiedBy: null
-                };
-            }
-        }
-    }
+  public isValidPosition(x: number, y: number): boolean {
+    return x >= 0 && x < this.cols && y >= 0 && y < this.rows;
+  }
 }

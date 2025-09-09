@@ -9,19 +9,6 @@ export const GRID_HEIGHT = GRID_ROWS * TILE_SIZE;
 export const GRID_OFFSET_X = (SCREEN_WIDTH - GRID_WIDTH) / 2;
 export const GRID_OFFSET_Y = (SCREEN_HEIGHT - GRID_HEIGHT) - 9;
 
-export enum UnitClass {
-  SWORD = 'sword',
-  SPEAR = 'spear',
-  BOW = 'bow',
-  MAGE = 'mage',
-  HEALER = 'healer'
-}
-
-export enum Team {
-  PLAYER = 'player',
-  ENEMY = 'enemy'
-}
-
 export const COLORS = {
   TILE_ODD: '#eeeed2',
   TILE_EVEN: '#baca44',

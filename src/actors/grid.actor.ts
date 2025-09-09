@@ -2,7 +2,7 @@ import { Actor, Color, Rectangle, TileMap, Vector } from "excalibur";
 import { COLORS, GRID_COLS, GRID_OFFSET_X, GRID_OFFSET_Y, GRID_ROWS, TILE_SIZE } from "../config/constants";
 
 export class Grid extends Actor {
-    private tileMap: TileMap;
+    public tileMap: TileMap;
 
     constructor() {
         super()
