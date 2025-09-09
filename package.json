@@ -1,0 +1,36 @@
+{
+  "name": "tac-tile-battle",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "keywords": [
+    "capacitor",
+    "mobile"
+  ],
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "build:android": "vite build && npx cap sync && npx cap run android",
+    "build:ios": "vite build && npx cap sync && npx cap run ios",
+    "generate:assets": "npx @capacitor/assets generate --iconBackgroundColor #176BAA --iconBackgroundColorDark #222222 --splashBackgroundColor #176BAA --splashBackgroundColorDark #111111",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/camera": "latest",
+    "@capacitor/core": "latest",
+    "@capacitor/ios": "^6.2.0",
+    "@capacitor/splash-screen": "latest",
+    "excalibur": "0.30.0-alpha.1267"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "latest",
+    "vite": "^5.4.2"
+  },
+  "author": "",
+  "license": "",
+  "homepage": "",
+  "repository": {},
+  "bugs": {}
+}

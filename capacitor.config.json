@@ -1,0 +1,10 @@
+{
+  "appId": "com.excaliburjs.capacitorjs",
+  "appName": "template-capacitorjs",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false
+    }
+  }
+}
